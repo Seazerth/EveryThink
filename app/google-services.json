@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8634207706",
+    "project_id": "everythink-dfdde",
+    "storage_bucket": "everythink-dfdde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8634207706:android:eb8a4dd6f6d579814484e3",
+        "android_client_info": {
+          "package_name": "com.heaghogprogram.everythink03"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7rpOltfU66OZfEowA-UrqxLhAY3D0-ms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
