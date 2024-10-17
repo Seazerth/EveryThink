@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.heaghogprogram.everythink03.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,9 +41,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkAndStartLoginActivity() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null || !isEmailVerified(currentUser)) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
+    }
+
+    private boolean isEmailVerified(FirebaseUser user) {
+        return user != null && user.isEmailVerified();
     }
 
     private void setupBottomNavigation() {

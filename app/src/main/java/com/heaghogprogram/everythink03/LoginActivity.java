@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.heaghogprogram.everythink03.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -45,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    checkEmailVerification();
                                 } else {
                                     showErrorDialog("Ошибка аутентификации", "Неправильный email или пароль");
                                 }
@@ -61,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // WindowInsets handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -76,5 +77,25 @@ public class LoginActivity extends AppCompatActivity {
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         android.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void checkEmailVerification() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && !user.isEmailVerified()) {
+            showUnverifiedDialog(user);
+        } else {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
+    }
+
+    private void showUnverifiedDialog(FirebaseUser user) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Ваш аккаунт не подтвержден")
+                .setMessage("Пожалуйста, проверьте свою электронную почту и завершите регистрацию.")
+                .setPositiveButton("Закрыть", (dialog, which) -> dialog.dismiss())
+                .show();
+
+        // Sign out the user since they haven't verified their account
+        FirebaseAuth.getInstance().signOut();
     }
 }
